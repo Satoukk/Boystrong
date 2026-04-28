@@ -5,6 +5,7 @@ import (
 	"os"
 	"sync"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -14,11 +15,16 @@ var (
 )
 
 func InitDB() (*sql.DB, error) {
-	var err error
+
+	err := godotenv.Load()
+	if err != nil {
+		return nil, err
+	}
+	var openErr error
 	once.Do(func() {
-		db, err = sql.Open("postgres", os.Getenv("DATABASE_URL"))
+		db, openErr = sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	})
-	return db, err
+	return db, openErr
 }
 
 func GetDB() *sql.DB {

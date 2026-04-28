@@ -1,8 +1,8 @@
 package models
 
 type Task struct {
-	id       int    `json:"id"`
-	title    string `json:"title"`
-	complete bool   `json:"complete"`
-	level    int    `json:"level"`
+	Id       int    `json:"id"`
+	Title    string `json:"title"`
+	Complete bool   `json:"complete"`
+	Level    int    `json:"level"`
 }
