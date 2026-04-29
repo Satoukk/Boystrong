@@ -68,3 +68,28 @@ func Getuser(c *gin.Context) {
 		"level": level,
 	})
 }
+
+func CreateUser(c *gin.Context) {
+	var req models.User
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+		return
+	}
+
+	dbConn := db.GetDB()
+	if dbConn == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "db not initialized"})
+		return
+	}
+	var id int
+	err := dbConn.QueryRow(
+		"INSERT INTO users (name, email, password, level) VALUES ($1, $2, $3, $4) RETURNING id", req.Name, req.Email, req.Password, 1).Scan(&id)
+	if err != nil {
+		// エラーハンドリング
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "user created", "user": gin.H{"id": id, "name": req.Name, "email": req.Email, "level": 1}})
+
+}
