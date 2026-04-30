@@ -15,19 +15,23 @@ function App() {
   const navigate = useNavigate()
 
   const loginext = () => {
-    navigate('/register')
+    navigate('/home')
   }
 
+  //ログイン処理
   const handlelogin = async(e)=>{
     e.preventDefault();
     try{
-    const res = await axios.get('http://localhost:8080/login', {
-        id
+      const res = await axios.post('http://localhost:8080/api/login', {
+         username,
+         email,
+         password
     })
+      const data = res.data
       localStorage.setItem('userId', data.user.id);
       alert('ログイン成功');
       loginext()
-  }catch(error){
+    }catch(error){
       alert('ログイン失敗')
     }
     

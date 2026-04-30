@@ -43,6 +43,7 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "login success", "user": gin.H{"id": id, "name": name, "email": email, "level": level}})
 }
 
+// ユーザー情報取得API
 func Getuser(c *gin.Context) {
 	id := c.Param("id")
 	var name string
@@ -69,6 +70,7 @@ func Getuser(c *gin.Context) {
 	})
 }
 
+// ユーザー作成
 func CreateUser(c *gin.Context) {
 	var req models.User
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -85,8 +87,8 @@ func CreateUser(c *gin.Context) {
 	err := dbConn.QueryRow(
 		"INSERT INTO users (name, email, password, level) VALUES ($1, $2, $3, $4) RETURNING id", req.Name, req.Email, req.Password, 1).Scan(&id)
 	if err != nil {
-		// エラーハンドリング
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
+		// エラー内容を詳細に返す（開発用）
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

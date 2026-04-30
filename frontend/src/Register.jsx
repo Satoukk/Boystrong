@@ -1,5 +1,6 @@
 import { React, useState } from 'react'
 import { data, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import App from './App.jsx'
 import axios from 'axios'
 
@@ -7,20 +8,23 @@ function Register() {
     const [username,setuserName] = useState('')
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
+    const navigate = useNavigate()
 
-
+    //登録処理
     const handlerRegister = async(e) =>{
         e.preventDefault();
         try{
-        const res = await axios.post('http://localhost:8080/api/register',{
-            username,
-            email,
-            password
+        const res = await axios.post('http://localhost:8080/api/CreateUser',{
+            Name :username,
+            Email :email,
+            Password :password,
+            Level :1
         })
-        const data = res.data
-        alert('登録成功')
-    }catch(error){
-        alert('登録失敗')
+            const data = res.data
+            alert('登録成功')
+            navigate('/')
+        }catch(error){
+             alert('登録失敗')
     }
 }
     return(

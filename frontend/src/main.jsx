@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import Register from './Register.jsx'
+import Home from './home.jsx'
 import { BrowserRouter as Router,Routes,Route} from 'react-router-dom'
 
 
@@ -13,6 +14,7 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/register" element={<Register/>} />
+        <Route path="/home" element={<Home/>} />
       </Routes>
     </Router>
   </StrictMode>,
