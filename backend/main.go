@@ -28,6 +28,7 @@ func main() {
 	r.POST("/api/CreateUser", handlers.CreateUser)
 	r.POST("/api/tasks", handlers.Createtask)
 	r.GET("/api/tasks/:level", handlers.GetTasks)
+	r.GET("/api/tasklist/:level", handlers.Tasklist)
 
 	port := os.Getenv("PORT")
 	if port == "" {

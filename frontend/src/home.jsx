@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Header from './header.jsx';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [data, setData] = useState({});
-
+  const navigate = useNavigate();
   // ユーザーデータの取得と認証チェック
   useEffect(() => {
     const fetchUser = async () => {
@@ -24,12 +25,25 @@ function Home() {
     fetchUser();
   }, []);
 
+    const handleStartTask = () => {
+        navigate("/task");
+    }
+    const handleCreateTask = () => {
+        navigate("/Createtask");
+    }
+
   return (
     <div>
       <Header />
       <div>
         <p>{data.level}</p>
-        <button>漢磨きスタート</button>
+        <select>
+            <option value="level1">レベル1</option>
+            <option value="level2">レベル2</option>
+            <option value="level3">レベル3</option>
+        </select>
+        <button onClick={handleStartTask}>漢磨きスタート</button>
+        <button onClick={handleCreateTask}>タスク追加</button>
       </div>
     </div>
   );
