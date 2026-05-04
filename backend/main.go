@@ -1,4 +1,4 @@
-package main
+﻿package main
 
 import (
 	"fmt"
@@ -29,6 +29,7 @@ func main() {
 	r.POST("/api/tasks", handlers.Createtask)
 	r.GET("/api/tasks/:level", handlers.GetTasks)
 	r.GET("/api/tasklist/:level", handlers.Tasklist)
+	r.PUT("/api/user/:id", handlers.UpdateLevel)
 
 	port := os.Getenv("PORT")
 	if port == "" {

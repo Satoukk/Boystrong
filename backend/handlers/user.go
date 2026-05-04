@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/Stoukk/sample-project/backend/db"
 	"github.com/Stoukk/sample-project/backend/models"
@@ -94,4 +95,32 @@ func CreateUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "user created", "user": gin.H{"id": id, "name": req.Name, "email": req.Email, "level": 1}})
 
+}
+
+func UpdateLevel(c *gin.Context) {
+	var req struct {
+		Level int `json:"level"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+		return
+	}
+
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user id"})
+		return
+	}
+
+	dbConn := db.GetDB()
+	if dbConn == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "db not initialized"})
+		return
+	}
+	_, err = dbConn.Exec("update users set level = $1 where id = $2", req.Level, id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "level updated", "level": req.Level})
 }

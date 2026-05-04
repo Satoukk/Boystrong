@@ -16,23 +16,25 @@ func Createtask(c *gin.Context) {
 		return
 	}
 
+	if req.Level < 1 || req.Level > 5 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "level must be between 1 and 5"})
+		return
+	}
+
 	dbConn := db.GetDB()
 	if dbConn == nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "db not initialized"})
 		return
 	}
 
-	var title string
-	var complete bool
-	var level int
-
-	err := dbConn.QueryRow("insert into task (title, complete, level) values ($1, $2, $3) returning title, complete, level", req.Title, false, req.Level).Scan(&title, &complete, &level)
+	var id int
+	err := dbConn.QueryRow("insert into tasks (title, level) values ($1, $2) returning id", req.Title, req.Level).Scan(&id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "task created", "task": gin.H{"title": title, "complete": complete, "level": level}})
+	c.JSON(http.StatusOK, gin.H{"message": "task created", "task": gin.H{"id": id, "title": req.Title, "level": req.Level}})
 
 }
 
@@ -44,22 +46,21 @@ func GetTasks(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "db not initialized"})
 		return
 	}
-	rows, err := dbConn.Query("select * from task where level = $1", level)
+	rows, err := dbConn.Query("select * from tasks where level = $1", level)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	for rows.Next() {
 		var id int
 		var title string
-		var complete bool
 		var level int
-		err := rows.Scan(&id, &title, &complete, &level)
+		err := rows.Scan(&id, &title, &level)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"message": "task found", "task": gin.H{"id": id, "title": title, "complete": complete, "level": level}})
+		c.JSON(http.StatusOK, gin.H{"message": "task found", "task": gin.H{"id": id, "title": title, "level": level}})
 	}
 }
 
@@ -70,9 +71,9 @@ func Tasklist(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "db not initialized"})
 		return
 	}
-	rows, err := dbConn.Query("select * from task where level = $1", level)
+	rows, err := dbConn.Query("select * from tasks where level = $1", level)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	var tasks []models.Task
@@ -82,10 +83,10 @@ func Tasklist(c *gin.Context) {
 		var level int
 		err := rows.Scan(&id, &title, &level)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		tasks = append(tasks, models.Task{Id: id, Title: title, Level: level})
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "tasks found", "tasks": tasks})
+	c.JSON(http.StatusOK, gin.H{"message": "task found", "tasks": tasks})
 }
