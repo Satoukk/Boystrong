@@ -2,7 +2,7 @@ import React from 'react';
 import { useTaskLevel } from './TaskContext.jsx';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Header from './Header';
+import Header from './header';
 
 export default function Result() {
   const { completedCount, setCompletedCount } = useTaskLevel();
