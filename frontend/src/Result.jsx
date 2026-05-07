@@ -2,7 +2,8 @@ import React from 'react';
 import { useTaskLevel } from './TaskContext.jsx';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Header from './header';
+import Header from './header.jsx';
+import { apiUrl } from './api.js';
 
 export default function Result() {
   const { completedCount, setCompletedCount } = useTaskLevel();
@@ -17,7 +18,7 @@ export default function Result() {
         window.location.href = '/';
       } else {
         try {
-          const res = await axios.get('http://localhost:8080/api/user/' + userId);
+          const res = await axios.get(apiUrl('/api/user/' + userId));
           setData(res.data);
         } catch (error) {
           alert('認証に失敗しました。再度ログインしてください。');
@@ -35,7 +36,7 @@ export default function Result() {
     setIsUpdating(true);
 
     try {
-      const res = await axios.put(`http://localhost:8080/api/user/${data.id}`, {
+      const res = await axios.put(apiUrl(`/api/user/${data.id}`), {
         level: nextLevel,
       });
       setUpdatedLevel(res.data.level);

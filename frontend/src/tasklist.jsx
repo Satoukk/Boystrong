@@ -1,8 +1,9 @@
 import React from 'react';
-import Header from './Header'
+import Header from './header.jsx'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import './App.css'
+import { apiUrl } from './api.js'
 
 
 function Tasklist(){
@@ -12,7 +13,7 @@ function Tasklist(){
    useEffect(()=>{
         const fetchTasks = async () => {
                 try {
-                        const res = await axios.get(`http://localhost:8080/api/tasklist/${level}`);
+                        const res = await axios.get(apiUrl(`/api/tasklist/${level}`));
                         setTasks(Array.isArray(res.data) ? res.data : res.data.tasks || []);
                 } catch (error) {
                         console.error('Error fetching tasks:', error);

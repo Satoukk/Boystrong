@@ -1,9 +1,10 @@
-import Header from './Header'
+import Header from './header.jsx'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useTaskLevel } from './TaskContext.jsx'
 import PopUp from './Popup.jsx'
 import { useNavigate } from 'react-router-dom'
+import { apiUrl } from './api.js'
 
 
 function Task(){
@@ -16,7 +17,7 @@ function Task(){
 	useEffect(() => {
     const fetchtask = async () =>{
       try{
-        const res = await axios.get(`http://localhost:8080/api/tasklist/${tasklevel}`);
+        const res = await axios.get(apiUrl(`/api/tasklist/${tasklevel}`));
         setData(Array.isArray(res.data) ? res.data : res.data.tasks || []);
         setCompletedCount(0);
       }catch(error){

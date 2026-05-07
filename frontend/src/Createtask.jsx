@@ -1,8 +1,9 @@
-import Header from './header'
+import Header from './header.jsx'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import './App.css'
+import { apiUrl } from './api.js'
 
 
 // タスク作成ページ
@@ -18,7 +19,7 @@ function Createtask(){
         
         const posttask = async () => {
         try {
-            const res = await axios.post('http://localhost:8080/api/tasks', {
+                        const res = await axios.post(apiUrl('/api/tasks'), {
                 title: title,
                 level: level
             });

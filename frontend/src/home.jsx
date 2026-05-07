@@ -3,6 +3,7 @@ import Header from './header.jsx';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useTaskLevel } from './TaskContext.jsx';
+import { apiUrl } from './api.js';
 
 function Home() {
   const [data, setData] = useState({});
@@ -16,7 +17,7 @@ function Home() {
         window.location.href = '/';
       } else {
         try {
-          const res = await axios.get('http://localhost:8080/api/user/' + userId);
+          const res = await axios.get(apiUrl('/api/user/' + userId));
           setData(res.data);
         } catch (error) {
           alert('認証に失敗しました。再度ログインしてください。');

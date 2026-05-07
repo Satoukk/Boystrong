@@ -1,10 +1,10 @@
-import { React, useState } from 'react'
-import { data, Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import App from './App.jsx'
 import Header from './header.jsx'
 import axios from 'axios'
 import './App.css'
+import { apiUrl } from './api.js'
 
 function Register() {
     const [username,setuserName] = useState('')
@@ -16,7 +16,7 @@ function Register() {
     const handlerRegister = async(e) =>{
         e.preventDefault();
         try{
-        const res = await axios.post('http://localhost:8080/api/CreateUser',{
+        const res = await axios.post(apiUrl('/api/CreateUser'),{
             name: username.trim(),
             email: email.trim(),
             password: password.trim(),
