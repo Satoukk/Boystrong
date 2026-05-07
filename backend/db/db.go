@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	"os"
 	"sync"
 
@@ -17,7 +18,7 @@ var (
 func InitDB() (*sql.DB, error) {
 
 	err := godotenv.Load()
-	if err != nil {
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return nil, err
 	}
 	var openErr error

@@ -1,6 +1,8 @@
 package middlewares
 
 import (
+	"os"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -9,9 +11,20 @@ import (
 
 // CORSミドルウェアの設定
 func SetupCORS(r *gin.Engine) {
+	origins := []string{"http://localhost:5173"}
+	if value := os.Getenv("CORS_ALLOWED_ORIGIN"); value != "" {
+		parts := strings.Split(value, ",")
+		origins = origins[:0]
+		for _, part := range parts {
+			origin := strings.TrimSpace(part)
+			if origin != "" {
+				origins = append(origins, origin)
+			}
+		}
+	}
+
 	r.Use(cors.New(cors.Config{
-		// React アプリのホストURLを指定
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins:     origins,
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
