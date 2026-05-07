@@ -11,10 +11,9 @@ import (
 
 // CORSミドルウェアの設定
 func SetupCORS(r *gin.Engine) {
-	origins := []string{"http://localhost:5173"}
+	origins := []string{"http://localhost:5173", "https://boystrong.vercel.app"}
 	if value := os.Getenv("CORS_ALLOWED_ORIGIN"); value != "" {
 		parts := strings.Split(value, ",")
-		origins = origins[:0]
 		for _, part := range parts {
 			origin := strings.TrimSpace(part)
 			if origin != "" {
