@@ -2,7 +2,7 @@ import Header from './header.jsx'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useTaskLevel } from './TaskContext.jsx'
-import PopUp from './Popup.jsx'
+import PopUp from './PopUp.jsx'
 import { useNavigate } from 'react-router-dom'
 import { apiUrl } from './api.js'
 
